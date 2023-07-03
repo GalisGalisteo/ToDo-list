@@ -30,6 +30,7 @@ function promptUser() {
                 rl.question("Write the task's title: ", function (title) {
                     todoList.addTask(title);
                     console.log("Task \"".concat(title, "\" added succesfully."));
+                    displayTasks(todoList);
                     promptUser();
                 });
                 break;
@@ -38,6 +39,7 @@ function promptUser() {
                     var taskId = parseInt(id, 10);
                     todoList.completeTask(taskId);
                     console.log("Task ".concat(id, " completed succesfully"));
+                    displayTasks(todoList);
                     promptUser();
                 });
                 break;
@@ -46,6 +48,7 @@ function promptUser() {
                     var taskId = parseInt(id, 10);
                     todoList.deleteTask(taskId);
                     console.log("Task ".concat(id, " erased succesfully."));
+                    displayTasks(todoList);
                     promptUser();
                 });
                 break;

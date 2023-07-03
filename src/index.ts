@@ -1,6 +1,8 @@
 import TodoList, { Task } from './app';
 
 const todoList = new TodoList();
+const completedTasks = new Set<number>(); // Store completed task IDs
+
 const taskListContainer = document.getElementById('taskList')!;
 const addTaskForm = document.getElementById('addTaskForm')!;
 const taskInput = document.getElementById('taskInput') as HTMLInputElement;
@@ -13,12 +15,20 @@ function renderTasks() {
     tasks.forEach((task) => {
         const taskItem = document.createElement('div');
         taskItem.innerHTML = `
-            <input type="checkbox" ${task.completed ? 'checked' : ''} 
-                onclick="completeTask(${task.id}, this.checked)">
-            <span>${task.title}</span>
-            <button onclick="deleteTask(${task.id})">Delete</button>
-        `;
+      <input type="checkbox" ${completedTasks.has(task.id) ? 'checked' : ''}>
+      <span>${task.title}</span>
+      <button class="delete-button" data-task-id="${task.id}">Delete</button>
+    `;
         taskListContainer.appendChild(taskItem);
+    });
+
+    // Add event listeners to the delete buttons
+    const deleteButtons = document.getElementsByClassName('delete-button');
+    Array.from(deleteButtons).forEach((button) => {
+        button.addEventListener('click', () => {
+            const taskId = parseInt(button.getAttribute('data-task-id') || '');
+            deleteTask(taskId);
+        });
     });
 }
 
@@ -42,9 +52,9 @@ function addTask(event: Event) {
 function completeTask(id: number, checked: boolean) {
     try {
         if (checked) {
-            todoList.completeTask(id);
+            completedTasks.add(id);
         } else {
-            // Optional: Add functionality to mark task as incomplete
+            completedTasks.delete(id);
         }
         renderTasks();
     } catch (error) {
@@ -58,6 +68,7 @@ function completeTask(id: number, checked: boolean) {
 function deleteTask(id: number) {
     try {
         todoList.deleteTask(id);
+        completedTasks.delete(id); // Remove from completed tasks
         renderTasks();
     } catch (error) {
         if (error instanceof Error) {
@@ -68,6 +79,16 @@ function deleteTask(id: number) {
 
 // Event listener for adding a task
 addTaskForm.addEventListener('submit', addTask);
+
+// Add event listener to the task list container and use event delegation
+taskListContainer.addEventListener('change', (event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.tagName.toLowerCase() === 'input' && target.getAttribute('type') === 'checkbox') {
+        const taskId = parseInt(target.parentNode?.querySelector('.delete-button')?.getAttribute('data-task-id') || '');
+        const checked = target.checked;
+        completeTask(taskId, checked);
+    }
+});
 
 // Initial rendering of tasks
 renderTasks();

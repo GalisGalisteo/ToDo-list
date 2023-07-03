@@ -1,10 +1,10 @@
-export type Task = {
+export interface Task {
     id: number;
     title: string;
     completed: boolean;
-};
+}
 
-class TodoList {
+export default class TodoList {
     private tasks: Task[] = [];
 
     constructor() {
@@ -44,5 +44,3 @@ class TodoList {
         return this.tasks;
     }
 }
-
-export default TodoList;
