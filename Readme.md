@@ -22,13 +22,7 @@ To get started with the ToDo List app, follow these steps:
 2. Navigate to the project directory:
 
    ```shell
-   cd ToDo-list
-   ```
-
-3. Install the dependencies:
-
-   ```shell
-   npm install
+   cd yourcomputerpath/ToDo-list
    ```
 
 ## Usage with CLI
@@ -38,7 +32,7 @@ The application can be used through the command-line interface (CLI). Follow the
 1. Start the CLI application:
 
    ```shell
-   node dist/cli.js
+   node /dist/cli.js
    ```
 
 2. Follow the prompts to perform various operations:
